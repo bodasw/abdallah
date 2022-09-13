@@ -1,0 +1,455 @@
+import tkinter as tk                # python 3
+from tkinter import font as tkfont  # python 3
+from tkinter import ttk
+from tkinter import *
+from tkinter.ttk import *
+a=[]
+aa=[]
+b=[]
+bb=[]
+c=[]
+cc=[]
+
+###Switching Class "maestro"
+class SampleApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.attributes('-fullscreen', True)
+        # the container is where we'll stack a bunch of frames
+        # on top of each other, then the one we want visible
+        # will be raised above the others
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+
+        self.frames = {}
+        ###Here we declare our basic Frames
+        for F in (dataEntry, result, login):
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
+            # put all of the pages in the same location;
+            # the one on the top of the stacking order
+            # will be the one that is visible.
+            frame.grid(row=0, column=0, sticky="nsew")
+        ###The First Frame we start with
+        self.show_frame("login")
+    def show_frame(self, page_name):
+        '''Show a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.tkraise()
+        frame.configure(background="#00FFFF")
+
+
+class dataEntry(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.n1=tk.StringVar()
+        self.n2=tk.StringVar()
+        self.n3=tk.StringVar()
+        self.n4=tk.StringVar()
+        self.n5=tk.StringVar()
+        self.var=StringVar()
+        self.x=0
+        self.y=0
+        self.z=0
+        self.o=["A","B","C"]
+
+        self.label = tk.Label(self, text="Enter The Data",foreground="#625D5D",background="#00FFFF", font=controller.title_font)
+        self.label.grid(row=0,column=0)
+
+        self.Menu = tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Choose System:")
+        self.Menu.grid(row=2,column=0)
+        
+        self.w=OptionMenu(self,self.var,*["A"],*self.o)
+        self.w.grid(row=2,column=1)
+
+        self.name_label = tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Name:")
+        self.name_label.grid(row=3,column=0)
+
+        self.name_entry=tk.Entry(self,textvariable=self.n1)
+        self.name_entry.grid(row=3,column=1)
+        
+        self.Check_in = tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Check-in/Am:")
+        self.Check_in.grid(row=4,column=0)
+
+        self.Check_in_entry=tk.Entry(self,textvariable=self.n2)
+        self.Check_in_entry.grid(row=4,column=1)
+
+        self.Check_out=tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Check-out/Pm:")
+        self.Check_out.grid(row=5,column=0)
+
+        self.Check_out_entry=tk.Entry(self,textvariable=self.n3)
+        self.Check_out_entry.grid(row=5,column=1)
+
+        self.adsences=tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Absences:")
+        self.adsences.grid(row=6,column=0)
+
+        self.adsences_entry=tk.Entry(self,textvariable=self.n4)
+        self.adsences_entry.grid(row=6,column=1)
+
+        self.permissions=tk.Label(self,background="#00FFFF",foreground="#625D5D", text="Permissions:")
+        self.permissions.grid(row=7,column=0)
+
+        self.permissions_entry=tk.Entry(self,textvariable=self.n5)
+        self.permissions_entry.grid(row=7,column=1)
+
+
+        self.submit = tk.Button(self, text="Submit ",foreground="#00FF00",background="#625D5D",command=self.check)
+        self.submit.grid(row=8,column=0)
+        
+        self.back = tk.Button(self, text=" Back ",foreground="#00FF00",background="#625D5D",command=lambda: controller.show_frame("login"))
+        self.back.grid(row=9,column=1)
+
+        ###Here we change the frame to result 'controller.show_frame("result")'
+        self.button = tk.Button(self, text="Result",background="#625D5D",foreground="#00FF00",command=lambda: controller.show_frame("result"))
+        self.button.grid(row=8,column=1)
+
+        #self.button = tk.Button(self, text="print L",command=self.gg)
+        #self.button.grid(row=10,column=1)
+
+    def check (self):
+        self.name=self.n1.get()
+        self.check00in=self.n2.get()
+        self.check00out=self.n3.get()
+        self.absences_v=self.n4.get()
+        self.permiss=self.n5.get()
+        self.l=self.var.get()
+
+        if self.check00in =="-":
+            self.time=0
+        else:
+            self.time=(12-int(self.check00in))+int(self.check00out)
+
+
+#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        if self.l =="A":
+            if self.x ==0:
+                a.append(self.l) 
+                a.append(self.name) 
+            aa.append(self.time)
+            aa.append(self.absences_v)
+            aa.append(self.permiss)
+            print(aa)
+            
+            if self.x ==2:
+                self.name_entry.delete(0, 'end')
+                self.controller.show_frame("result")
+                self.all_time_a=int(aa[0])+int(aa[3])+int(aa[6])
+                print(self.all_time_a)
+                a.append(self.all_time_a)
+                self.cost_hours_a=self.all_time_a*800
+                a.append(self.cost_hours_a)
+                self.absences_all_a=int(aa[1])+int(aa[4])+int(aa[7])
+                a.append(self.absences_all_a)
+                self.permiss_all_a=int(aa[2])+int(aa[5])+int(aa[8])
+                a.append(self.permiss_all_a)
+
+                if self.all_time_a >= 24:
+                    self.f_a=self.all_time_a-24
+                    self.bonus_a=self.f_a*1920
+                    print(self.bonus_a)
+                    a.append(self.bonus_a)
+                    self.salary_a=self.bonus_a+self.cost_hours_a
+                    a.append(self.salary_a)
+
+                else :
+                    self.bonus_a="-"
+                    a.append(self.bonus_a)
+                    self.salary_a=self.cost_hours_a
+                    a.append(self.salary_a)
+
+                
+            print(a)
+            self.x+=1
+             
+
+#BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+        if self.l =="B":
+            if self.y ==0:
+                b.append(self.l)
+                b.append(self.name)
+            bb.append(self.time)
+            bb.append(self.absences_v)
+            bb.append(self.permiss)
+            print(bb)
+            
+            if self.y ==2:
+                self.name_entry.delete(0, 'end')
+                self.controller.show_frame("result")
+                self.all_time_b=int(bb[0])+int(bb[3])+int(bb[6])
+                print(self.all_time_b)
+                b.append(self.all_time_b)
+                self.cost_hours_b=self.all_time_b*350
+                b.append(self.cost_hours_b)
+                self.absences_all_b=int(bb[1])+int(bb[4])+int(bb[7])
+                b.append(self.absences_all_b)
+                self.permiss_all_b=int(bb[2])+int(bb[5])+int(bb[8])
+                b.append(self.permiss_all_b)
+
+                if self.all_time_b >= 24:
+                    self.f_b=self.all_time_b-24
+                    self.bonus_b=self.f_b*840
+                    print(self.bonus_b)
+                    b.append(self.bonus_b)
+                    self.salary_b=self.bonus_b+self.cost_hours_b
+
+                else :
+                    self.bonus_a="-"
+                    b.append(self.bonus_a)
+                    self.salary_b=self.cost_hours_b
+                
+
+                if self.absences_all_b > 2:
+                    m=self.absences_all_b-2
+                    m=m*1400
+                    self.salary_b=self.salary_b-m
+
+                if self.permiss_all_b > 2 and self.all_time_b < 24:
+                    hh=24-self.all_time_b
+                    hh=hh*700
+                    self.salary_b=self.salary_b-hh
+
+                b.append(self.salary_b)
+
+
+
+            print(b)
+            self.y+=1
+
+            
+#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+        if self.l =="C":
+            if self.z ==0:
+                c.append(self.l)
+                c.append(self.name)            
+            cc.append(self.time)
+            cc.append(self.absences_v)
+            cc.append(self.permiss)
+            print(cc)
+            
+            if self.z ==2:
+                self.name_entry.delete(0, 'end')
+                self.controller.show_frame("result")
+                self.all_time_c=int(cc[0])+int(cc[3])+int(cc[6])
+                print(self.all_time_c)
+                c.append(self.all_time_c)
+                self.cost_hours_c=self.all_time_c*180
+                c.append(self.cost_hours_c)
+                self.absences_all_c=int(cc[1])+int(cc[4])+int(cc[7])
+                c.append(self.absences_all_c)
+                self.permiss_all_c=int(cc[2])+int(cc[5])+int(cc[8])
+                c.append(self.permiss_all_c)
+
+                if self.all_time_c >= 24:
+                    self.f_c=self.all_time_c-24
+                    self.bonus_c=self.f_c*360
+                    print(self.bonus_c)
+                    c.append(self.bonus_c)
+                    self.salary_c=self.bonus_c+self.cost_hours_c
+
+                else :
+                    self.bonus_c="-"
+                    c.append(self.bonus_c)
+                    self.salary_c=self.cost_hours_c
+                
+
+                if self.absences_all_c > 1:
+                    m=self.absences_all_c-1
+                    m=m*2880
+                    self.salary_c=self.salary_c-m
+
+                if self.permiss_all_c > 1 and self.all_time_c < 24:
+                    ii=24-self.all_time_c
+                    ii=ii*1440
+                    self.salary_c=self.salary_c-ii
+
+                c.append(self.salary_c)
+
+               
+            self.z+=1
+            print(c)
+
+
+
+        self.Check_in_entry.delete(0, 'end')
+        self.Check_out_entry.delete(0, 'end')
+        self.adsences_entry.delete(0, 'end')
+        self.permissions_entry.delete(0, 'end')
+
+
+    def gg (self):
+        print(a)
+        print(aa)
+        print(b)
+        print(bb)
+        print(c)
+        print(cc)
+
+
+     
+class result (tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        
+
+        self.controller = controller
+
+        self.var_1 =tk.StringVar()
+
+        self.label11= tk.Label(self, text="Result",foreground="#625D5D",background="#00FFFF", font=controller.title_font)
+        self.label11.grid(row=0,column=0)
+        
+        
+
+        self.label22= tk.Label(self, text="Systeam",background="#00FFFF",foreground="#625D5D")
+        self.label22.grid(row=2,column=0)
+               
+        self.label33= tk.Label(self, text=" Name ",background="#00FFFF",foreground="#625D5D")
+        self.label33.grid(row=2,column=1)
+
+        self.label44= tk.Label(self, text=" Hours ",background="#00FFFF",foreground="#625D5D")
+        self.label44.grid(row=2,column=2)
+
+        self.label55= tk.Label(self, text=" Absence ",background="#00FFFF",foreground="#625D5D")
+        self.label55.grid(row=2,column=3)
+
+        self.label66= tk.Label(self, text=" Permissions ",background="#00FFFF",foreground="#625D5D")
+        self.label66.grid(row=2,column=4)
+
+        self.label77= tk.Label(self, text=" Bonus ",background="#00FFFF",foreground="#625D5D")
+        self.label77.grid(row=2,column=5)
+
+        self.label88= tk.Label(self, text=" Cost/hours ",background="#00FFFF",foreground="#625D5D")
+        self.label88.grid(row=2,column=6)
+
+        self.label99= tk.Label(self, text=" Salary",background="#00FFFF",foreground="#625D5D")
+        self.label99.grid(row=2,column=7)
+
+        self.Menu_1 = tk.Label(self,background="#00FFFF", text="Enter Name of Employe:",foreground="#625D5D")
+        self.Menu_1.grid(row=1,column=0)
+        self.entry_s=tk.Entry(self,textvariable=self.var_1)
+        self.entry_s.grid(row=1,column=1)
+
+
+
+        self.button1= tk.Button(self,foreground="#00FF00",background="#625D5D", text="Data entry",command=lambda: controller.show_frame("dataEntry"))
+        self.button1.grid(row=1,column=5)
+
+        self.button2= tk.Button(self,foreground="#00FF00",background="#625D5D", text="see result ",command=self.see)
+        self.button2.grid(row=1,column=3)
+
+
+    def see (self):
+
+        self.l_l=self.var_1.get()
+
+        if self.l_l ==a[1]:
+
+            self.label_1= tk.Label(self, text=a[0],background="#00FFFF")
+            self.label_1.grid(row=3,column=0)
+            self.label_2= tk.Label(self, text=a[1],background="#00FFFF")
+            self.label_2.grid(row=3,column=1)
+            self.label_3= tk.Label(self, text=a[2],background="#00FFFF")
+            self.label_3.grid(row=3,column=2)
+            self.label_4= tk.Label(self, text=a[6],background="#00FFFF")
+            self.label_4.grid(row=3,column=5)
+            self.label_5= tk.Label(self, text=a[3],background="#00FFFF")
+            self.label_5.grid(row=3,column=6)
+            self.label_6= tk.Label(self, text=a[4],background="#00FFFF")
+            self.label_6.grid(row=3,column=3)
+            self.label_7= tk.Label(self, text=a[7],background="#00FFFF")
+            self.label_7.grid(row=3,column=7)
+            self.label_8= tk.Label(self, text=a[5],background="#00FFFF")
+            self.label_8.grid(row=3,column=4)
+
+
+        elif self.l_l ==b[1]:
+            self.label_10= tk.Label(self, text=b[0],background="#00FFFF")
+            self.label_10.grid(row=4,column=0)
+            self.label_20= tk.Label(self, text=b[1],background="#00FFFF")
+            self.label_20.grid(row=4,column=1)
+            self.label_30= tk.Label(self, text=b[2],background="#00FFFF")
+            self.label_30.grid(row=4,column=2)
+            self.label_40= tk.Label(self, text=b[6],background="#00FFFF")
+            self.label_40.grid(row=4,column=5)
+            self.label_50= tk.Label(self, text=b[3],background="#00FFFF")
+            self.label_50.grid(row=4,column=6)
+            self.label_60= tk.Label(self, text=b[4],background="#00FFFF")
+            self.label_60.grid(row=4,column=3)
+            self.label_70= tk.Label(self, text=b[7],background="#00FFFF")
+            self.label_70.grid(row=4,column=7)
+            self.label_80= tk.Label(self, text=b[5],background="#00FFFF")
+            self.label_80.grid(row=4,column=4)
+
+
+        elif self.l_l ==c[1]:
+            self.label_01= tk.Label(self, text=c[0],background="#00FFFF")
+            self.label_01.grid(row=5,column=0)
+            self.label_02= tk.Label(self, text=c[1],background="#00FFFF")
+            self.label_02.grid(row=5,column=1)
+            self.label_03= tk.Label(self, text=c[2],background="#00FFFF")
+            self.label_03.grid(row=5,column=2)
+            self.label_04= tk.Label(self, text=c[6],background="#00FFFF")
+            self.label_04.grid(row=5,column=5)
+            self.label_05= tk.Label(self, text=c[3],background="#00FFFF")
+            self.label_05.grid(row=5,column=6)
+            self.label_06= tk.Label(self, text=c[4],background="#00FFFF")
+            self.label_06.grid(row=5,column=3)
+            self.label_07= tk.Label(self, text=c[7],background="#00FFFF")
+            self.label_07.grid(row=5,column=7)
+            self.label_08= tk.Label(self, text=c[5],background="#00FFFF")
+            self.label_08.grid(row=5,column=4)
+
+        self.entry_s.delete(0, 'end')
+
+
+
+class login(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.user_name=tk.StringVar()
+        self.pass_word=tk.StringVar()
+
+        self.label = tk.Label(self, text="Login",foreground="#625D5D",background="#00FFFF", font=controller.title_font)
+        self.label.pack(side="top", fill="x", pady=10)
+
+        self.label_1 = tk.Label(self, text="User Name",foreground="#625D5D",background="#00FFFF", font='bold_font')
+        self.label_1.pack()
+
+        self.user=tk.Entry(self,textvariable=self.user_name)
+        self.user.pack()
+
+        self.label_2 = tk.Label(self, text="password",foreground="#625D5D",background="#00FFFF", font='bold_font')
+        self.label_2.pack()
+
+        self.pass1=tk.Entry(self,textvariable=self.pass_word)
+        self.pass1.pack()
+
+        self.button2 = tk.Button(self, text="login",foreground="#00FF00",background="#625D5D",command=self.check)
+        self.button2.pack()
+        
+        self.button3 = tk.Button(self, text="Result",foreground="#00FF00",background="#625D5D",command=lambda: controller.show_frame("result"))
+        self.button3.pack()
+
+    def check (self):
+        self.name=self.user_name.get()
+        self.password=self.pass_word.get()
+        print(self.name,self.password)
+
+
+
+
+        if self.name =="Abduallah" and self.password=="123" :
+            self.controller.show_frame("dataEntry")
+            self.user.delete(0, 'end')
+            self.pass1.delete(0, 'end')
+
+
+app = SampleApp()
+app.mainloop()
